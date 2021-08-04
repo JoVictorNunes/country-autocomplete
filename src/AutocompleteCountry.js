@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import data from './data'
 
+const countries = data
 
 const OptionList = styled.ul`
   list-style-type: none;
@@ -78,22 +80,20 @@ const Input = styled.div`
   }
 `
 
-function Autocomplete(props) {
+function AutocompleteCountry() {
   const [toggle, setToggle] = useState(false)
   const [userInput, setUserInput] = useState('')
   const [filteredSuggestions, setFilteredSuggestions] = useState([])
 
-  const { options } = props
-
   useEffect(() => {
-    setFilteredSuggestions(options)
+    setFilteredSuggestions(countries)
   }, [])
 
   function handleChange(e) {
     const input = e.currentTarget.value
 
-    const filteredSuggestions = options.filter(
-      option => option.toLowerCase().includes(input.toLowerCase())
+    const filteredSuggestions = countries.filter(
+      country => country.name.toLowerCase().includes(input.toLowerCase())
     )
 
     setFilteredSuggestions(filteredSuggestions)
@@ -119,8 +119,9 @@ function Autocomplete(props) {
       <OptionList>
         {
           filteredSuggestions.map(suggestion => (
-            <li key={suggestion} onClick={optionClick}>
-              {suggestion}
+            <li key={suggestion.abbr} onClick={optionClick}>
+              <img alt="flag" src={`https://www.countryflags.io/${suggestion.abbr}/flat/24.png`}></img>
+              <span>{suggestion.name}</span>
             </li>
           ))
         }
@@ -152,4 +153,4 @@ function Autocomplete(props) {
   )
 }
 
-export default Autocomplete
+export default AutocompleteCountry
