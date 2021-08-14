@@ -1,93 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import data from './data'
-
-const countries = data
-
-const OptionList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  max-height: 100px;
-  overflow: auto;
-
-  &::-webkit-scrollbar-track {
-    background-color: #f4f4f4;
-  }
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    background: #f4f4f4;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #aaa;
-    border-radius: 8px;
-  }
-
-  li {
-    padding: 8px;
-    display: flex;
-    align-items: center;
-
-    span {
-      margin-left: 10px;
-      font-family: inherit;
-    }
-  }
-
-  li:hover {
-    background-color: #aaa;
-    cursor: pointer;
-  }
-`
-
-const Wrapper = styled.div`
-  width: 30%;
-  border: 1px solid #aaa;
-  border-radius: 5px;
-  overflow: hidden;
-
-  * {
-    transition: .2s;
-  }
-`
-
-const Input = styled.div`
-  display: flex;
-  height: 32px;
-  border-bottom: ${props => props.toggle ? '1px solid #aaa' : null};
-
-  input {
-    flex-grow: 1;
-    border: none;
-    outline: none;
-    font-family: inherit;
-  }
-
-  button {
-    flex-grow: 0;
-    flex-basis: 32px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    background: none;
-  }
-
-  button:hover {
-    background-color: #aaa;
-    cursor: pointer;
-  }
-`
+import { OptionList, Wrapper, Input, ListItem } from './styles'
+import getCountries from './getCountries'
 
 function AutocompleteCountry() {
   const [toggle, setToggle] = useState(false)
   const [userInput, setUserInput] = useState('')
+  const [countries, setCountries] = useState([])
+  const [activeOption, setActiveOption] = useState(-1)
   const [filteredSuggestions, setFilteredSuggestions] = useState([])
+  const [lastArrowPressed, setLastArrowPressed] = useState(null)
 
   useEffect(() => {
-    setFilteredSuggestions(countries)
+    (async function () {
+      const countries = await getCountries()
+      setCountries(countries)
+      setFilteredSuggestions(countries)
+    })()
   }, [])
+
+  useEffect(() => {
+    const activeElement = document.querySelector('.active')
+    const optionList = document.querySelector('.list')
+
+    if (activeElement) {
+      if (activeElement.offsetTop < optionList.scrollTop + activeElement.clientHeight ||
+        activeElement.offsetTop > optionList.scrollTop + optionList.clientHeight) {
+          if (lastArrowPressed === 'up') activeElement.scrollIntoView()
+          else activeElement.scrollIntoView(false)
+        }
+    }
+  })
 
   function handleChange(e) {
     const input = e.currentTarget.value
@@ -101,39 +43,93 @@ function AutocompleteCountry() {
     setToggle(true)
   }
 
+  function handleKeyDown(e) {
+    if (e.keyCode === 13) {
+      if (activeOption === -1) {
+        return
+      }
+
+      const curSuggestion = filteredSuggestions[activeOption]
+
+      setUserInput(curSuggestion.name)
+      setFilteredSuggestions([curSuggestion])
+      setActiveOption(0)
+      setToggle(false)
+      setLastArrowPressed('enter')
+      return
+    }
+
+    if (e.keyCode === 38 || e.keyCode === 40) {
+      setToggle(true)
+    }
+
+    if (e.keyCode === 38) {
+      if (activeOption === -1) {
+        return
+      }
+      else if (activeOption === 0) {
+        setActiveOption(filteredSuggestions.length - 1)
+      }
+      else {
+        setActiveOption(active => active - 1)
+      }
+
+      setLastArrowPressed('up')
+
+      return
+    }
+
+    if (e.keyCode === 40) {
+      if (activeOption === filteredSuggestions.length - 1) {
+        setActiveOption(0)
+      }
+      else {
+        setActiveOption(active => active + 1)
+      }
+      
+      setLastArrowPressed('down')
+
+      return
+    }
+  }
+
   function optionClick(e) {
     const v = e.currentTarget.innerText
-    setFilteredSuggestions([v])
+    const country = countries.find(country => country.name.toLowerCase().includes(v.toLowerCase()))
+
     setUserInput(v)
+    setFilteredSuggestions([country])
     setToggle(false)
+    setActiveOption(0)
   }
 
   function handleToggle() {
-    setToggle(!toggle)
+    setToggle(prev => !prev)
   }
 
   let suggestions = null
 
   if (filteredSuggestions.length) {
     suggestions = (
-      <OptionList>
+      <OptionList className='list'>
         {
-          filteredSuggestions.map(suggestion => (
-            <li key={suggestion.abbr} onClick={optionClick}>
-              <img alt="flag" src={`https://www.countryflags.io/${suggestion.abbr}/flat/24.png`}></img>
+          filteredSuggestions.map((suggestion, index) => (
+            <ListItem
+              key={suggestion.alpha2Code}
+              active={index === activeOption ? true : false}
+              className={index === activeOption ? 'active' : null}
+              onClick={optionClick}
+            >
+              <img alt="flag" src={`https://www.countryflags.io/${suggestion.alpha2Code}/flat/24.png`} />
               <span>{suggestion.name}</span>
-            </li>
+            </ListItem>
           ))
         }
       </OptionList>
     )
   }
   else {
-    suggestions = (
-      <div>
-        No suggestions.
-      </div>
-    )
+    suggestions = <div>No suggestions.</div>
   }
 
   return (
@@ -143,6 +139,7 @@ function AutocompleteCountry() {
           type='text'
           value={userInput}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           placeholder="Enter here"
         />
         <button onClick={handleToggle}>+</button>

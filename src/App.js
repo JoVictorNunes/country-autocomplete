@@ -1,6 +1,6 @@
 import Autocomplete from "./Autocomplete";
-import { createGlobalStyle } from 'styled-components'
 import AutocompleteCountry from "./AutocompleteCountry";
+import { createGlobalStyle } from 'styled-components'
 
 const Global = createGlobalStyle`
   body {
@@ -10,17 +10,15 @@ const Global = createGlobalStyle`
 
 function App() {
   return (
-    <>
+    <div className="App">
       <Global />
-      <div className="App">
 
-        {/* <Autocomplete
-          options={['Brasil', 'Itália', 'Inglaterra', 'Hungria', 'França', 'Espanha', 'Portugal', 'Escócia']}
-        /> */}
+      <Autocomplete
+        options={['Brasil', 'Itália', 'Inglaterra', 'Hungria', 'França', 'Espanha', 'Portugal', 'Escócia']}
+      />
 
-        <AutocompleteCountry />
-      </div>
-    </>
+      <AutocompleteCountry />
+    </div>
   );
 }
 

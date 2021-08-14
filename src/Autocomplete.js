@@ -1,82 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-
-
-const OptionList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  max-height: 100px;
-  overflow: auto;
-
-  &::-webkit-scrollbar-track {
-    background-color: #f4f4f4;
-  }
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    background: #f4f4f4;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #aaa;
-    border-radius: 8px;
-  }
-
-  li {
-    padding: 8px;
-    display: flex;
-    align-items: center;
-
-    span {
-      margin-left: 10px;
-      font-family: inherit;
-    }
-  }
-
-  li:hover {
-    background-color: #aaa;
-    cursor: pointer;
-  }
-`
-
-const Wrapper = styled.div`
-  width: 30%;
-  border: 1px solid #aaa;
-  border-radius: 5px;
-  overflow: hidden;
-
-  * {
-    transition: .2s;
-  }
-`
-
-const Input = styled.div`
-  display: flex;
-  height: 32px;
-  border-bottom: ${props => props.toggle ? '1px solid #aaa' : null};
-
-  input {
-    flex-grow: 1;
-    border: none;
-    outline: none;
-    font-family: inherit;
-  }
-
-  button {
-    flex-grow: 0;
-    flex-basis: 32px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    background: none;
-  }
-
-  button:hover {
-    background-color: #aaa;
-    cursor: pointer;
-  }
-`
+import { OptionList, Wrapper, Input } from './styles'
 
 function Autocomplete(props) {
   const [toggle, setToggle] = useState(false)
@@ -87,7 +10,7 @@ function Autocomplete(props) {
 
   useEffect(() => {
     setFilteredSuggestions(options)
-  }, [])
+  }, [options])
 
   function handleChange(e) {
     const input = e.currentTarget.value
@@ -109,7 +32,7 @@ function Autocomplete(props) {
   }
 
   function handleToggle() {
-    setToggle(!toggle)
+    setToggle(prev => !prev)
   }
 
   let suggestions = null
@@ -128,11 +51,7 @@ function Autocomplete(props) {
     )
   }
   else {
-    suggestions = (
-      <div>
-        No suggestions.
-      </div>
-    )
+    suggestions = <div>No suggestions.</div>
   }
 
   return (
@@ -144,7 +63,7 @@ function Autocomplete(props) {
           onChange={handleChange}
           placeholder="Enter here"
         />
-        <button onClick={handleToggle}>+</button>
+        <button onClick={handleToggle}>{toggle ? '-' : '+'}</button>
       </Input>
 
       {toggle && suggestions}
