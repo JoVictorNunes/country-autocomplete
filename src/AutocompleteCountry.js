@@ -25,13 +25,13 @@ function AutocompleteCountry(props) {
     if (activeElement) {
       if (activeElement.offsetTop < optionList.scrollTop + activeElement.clientHeight ||
         activeElement.offsetTop > optionList.scrollTop + optionList.clientHeight) {
-          if (lastArrowPressed === 'up') {
-            activeElement.scrollIntoView()
-          }
-          else {
-            activeElement.scrollIntoView(false)
-          }
+        if (lastArrowPressed === 'up') {
+          activeElement.scrollIntoView()
         }
+        else {
+          activeElement.scrollIntoView(false)
+        }
+      }
     }
   })
 
