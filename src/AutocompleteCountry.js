@@ -127,7 +127,7 @@ function AutocompleteCountry(props) {
               className={index === activeOption ? 'active' : null}
               onClick={optionClick}
             >
-              <img alt="flag" src={`https://www.countryflags.io/${suggestion.alpha2Code}/flat/24.png`} />
+              <img alt='flag' src={`https://www.countryflags.io/${suggestion.alpha2Code}/flat/24.png`} />
               <span>{suggestion.name}</span>
             </ListItem>
           ))
@@ -147,7 +147,7 @@ function AutocompleteCountry(props) {
           value={userInput}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Enter here"
+          placeholder='Enter here'
         />
         <button onClick={handleToggle}>+</button>
       </Input>

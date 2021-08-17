@@ -1,4 +1,4 @@
-import AutocompleteCountry from "./AutocompleteCountry";
+import AutocompleteCountry from './AutocompleteCountry'
 import { Global } from './styles'
 
 function getCountry(name) {
@@ -7,7 +7,7 @@ function getCountry(name) {
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Global />
       <AutocompleteCountry callback={getCountry} />
     </div>
