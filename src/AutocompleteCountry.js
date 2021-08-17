@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { OptionList, Wrapper, Input, ListItem } from './styles'
 import getCountries from './getCountries'
 
-function AutocompleteCountry() {
+function AutocompleteCountry(props) {
   const [toggle, setToggle] = useState(false)
   const [userInput, setUserInput] = useState('')
   const [countries, setCountries] = useState([])
@@ -25,8 +25,12 @@ function AutocompleteCountry() {
     if (activeElement) {
       if (activeElement.offsetTop < optionList.scrollTop + activeElement.clientHeight ||
         activeElement.offsetTop > optionList.scrollTop + optionList.clientHeight) {
-          if (lastArrowPressed === 'up') activeElement.scrollIntoView()
-          else activeElement.scrollIntoView(false)
+          if (lastArrowPressed === 'up') {
+            activeElement.scrollIntoView()
+          }
+          else {
+            activeElement.scrollIntoView(false)
+          }
         }
     }
   })
@@ -37,7 +41,8 @@ function AutocompleteCountry() {
     const filteredSuggestions = countries.filter(
       country => country.name.toLowerCase().includes(input.toLowerCase())
     )
-
+    
+    props.callback(input || null)
     setFilteredSuggestions(filteredSuggestions)
     setUserInput(input)
     setToggle(true)
@@ -51,6 +56,7 @@ function AutocompleteCountry() {
 
       const curSuggestion = filteredSuggestions[activeOption]
 
+      props.callback(curSuggestion.name || null)
       setUserInput(curSuggestion.name)
       setFilteredSuggestions([curSuggestion])
       setActiveOption(0)
@@ -97,6 +103,7 @@ function AutocompleteCountry() {
     const v = e.currentTarget.innerText
     const country = countries.find(country => country.name.toLowerCase().includes(v.toLowerCase()))
 
+    props.callback(v || null)
     setUserInput(v)
     setFilteredSuggestions([country])
     setToggle(false)

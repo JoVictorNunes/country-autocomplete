@@ -1,23 +1,15 @@
-import Autocomplete from "./Autocomplete";
 import AutocompleteCountry from "./AutocompleteCountry";
-import { createGlobalStyle } from 'styled-components'
+import { Global } from './styles'
 
-const Global = createGlobalStyle`
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
-`
+function getCountry(name) {
+  console.log(name)
+}
 
 function App() {
   return (
     <div className="App">
       <Global />
-
-      <Autocomplete
-        options={['Brasil', 'Itália', 'Inglaterra', 'Hungria', 'França', 'Espanha', 'Portugal', 'Escócia']}
-      />
-
-      <AutocompleteCountry />
+      <AutocompleteCountry callback={getCountry} />
     </div>
   );
 }

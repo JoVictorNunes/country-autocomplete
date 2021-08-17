@@ -1,4 +1,10 @@
-import styled from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
+
+export const Global = createGlobalStyle`
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+`
 
 export const OptionList = styled.ul`
   list-style-type: none;
@@ -55,7 +61,7 @@ overflow: hidden;
 export const Input = styled.div`
 display: flex;
 height: 32px;
-border-bottom: ${props => props.toggle ? '1px solid #aaa' : null};
+border-bottom: ${props => props.toggle ? '1px solid #aaa' : 'none'};
 
 input {
   flex-grow: 1;
