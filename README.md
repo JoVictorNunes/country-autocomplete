@@ -12,7 +12,7 @@ You must pass a function to the Autocomplete components's `callback` prop. The f
 
 Clone the repository:
 
-`git clone `
+`git clone https://github.com/JoVictorNunes/country-autocomplete.git`
 
 In the project directory, you can run:
 
