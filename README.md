@@ -4,7 +4,7 @@ A React autocomplete component to select countries.
 
 ## Prop
 
-You must pass a function to the AutocompleteCountry components's `callback` prop. The function is called and receives a string as single argument that represents the current country every time the user changes the input value.
+You must pass a function to the AutocompleteCountry component's `callback` prop. The function is called and receives a string as single argument that represents the current country every time the user changes the input value.
 
 *callback*: **Function(country: string) => any**
 
